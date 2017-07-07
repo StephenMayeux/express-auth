@@ -11,12 +11,14 @@ const mongoose = require('mongoose');
 
 const app = express();
 
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/express-auth')
+
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
 app.use(logger('combined'))
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json({ type: '*/*' }))
+
 
 app.use(session({
   secret: process.env.SECRET,
@@ -28,6 +30,8 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+
+app.use('/', require('./routes'))
 
 const port = process.env.PORT || 3000
 app.listen(port, () => {
