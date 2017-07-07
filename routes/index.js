@@ -47,4 +47,9 @@ router.post('/signin', requireSignin, (req, res) => {
   res.send({ success: true })
 })
 
+router.get('/logout', (req, res) => {
+  req.logout()
+  // res.redirect('/some/path')
+})
+
 module.exports = router;
