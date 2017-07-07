@@ -4,16 +4,28 @@ const User = require('../models/User')
 const passport = require('passport')
 require('../services/passport')
 
+// add this variable before POST /signin route handler
 const requireSignin = passport.authenticate('local', {
   failureRedirect: '/error'
 })
+
+// add this variable to all routes you want protected
 const requireAuth = (req, res) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.send({ success: true })
+  res.send({ msg: 'no signed in' })
   // res.redirect to login or warning screen
 }
+
+router.get('/', (req, res) => {
+  res.send({ success: true })
+  // or your home screen
+})
+
+router.get('/secret', requireAuth, (req, res) => {
+  res.send({ secret: 'no salsa in the house!' })
+})
 
 router.post('/signup', (req, res) => {
   // validate the email and passsword either here or on the client
